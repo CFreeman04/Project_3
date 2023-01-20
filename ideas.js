@@ -53,7 +53,7 @@ function createMaps(earthquake) {
     legend.onAdd = function(map) {  
       var div = L.DomUtil.create("div", "legend");
   
-      div.innerHTML += '<i style="background: red"></i><span>-0-1</span><br>';
+      div.innerHTML += '<i style="background: red"></i><span>0-1</span><br>';
       div.innerHTML += '<i style="background: orange"></i><span>1-2</span><br>';
       div.innerHTML += '<i style="background: yellow"></i><span>2-3</span><br>';
       div.innerHTML += '<i style="background: green"></i><span>3-4</span><br>';
