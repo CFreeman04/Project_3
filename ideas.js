@@ -1,5 +1,4 @@
-// our static json made from jsonifying our csv
-// var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
+// Our static json made from jsonifying our csv
 var url = "../../waffle_house.json";
 
 // Perform a GET request to the query URL/
