@@ -11,7 +11,7 @@ d3.json(url).then(function(data) {
 // Functipon to determine marker color
 rating_numbers = [0, 3, 3.8, 4.2]
 function chooseColor(rating) {
-  if (rating < rating_numbers[1]) return "red";
+  if (rating < rating_numbers[1]) return "gray";
   else if (rating < rating_numbers[2]) return "yellow";
   else if (rating < rating_numbers[3]) return "green";
   else return "blue";
@@ -39,7 +39,7 @@ function createMaps(waffles) {
           radius: 15000
         }).bindPopup(`<h2>${waffles[i].name}</h2> <hr> <h3>${waffles[i].address}</h3>`).addTo(myMap);
       }
-      
+
    // ------- Legend for ratings -------------------------------------------
     var legend = L.control({ position: "topright" });
   
