@@ -88,20 +88,25 @@ function createMaps(waffles) {
   });
 
   // ------- Legend for ratings -------------------------------------------
-  // var legend = L.control({ position: "topright" });
+  var legend = L.control({ position: "bottomright" });
 
-  // legend.onAdd = function(map) {  
-  //   var div = L.DomUtil.create("div", "legend");
+  legend.onAdd = function(map) {  
+    var div = L.DomUtil.create("div", "legend");
 
-  //   div.innerHTML = "<h4>Rating</h4>";
-  //   for (i = 0; i < rating_numbers.length; i++) {
-  //     div.innerHTML += '<i style="background:' + chooseColor1(rating_numbers[i]) + '"></i>' + 
-  //             rating_numbers[i] + (rating_numbers[i+1] ? '&ndash;' + rating_numbers[i+1] : '+') + '<br>';
-  //   }
-  // return div;
-  // };
+    div.innerHTML = "<h4>Rating</h4>";
+    for (i = 0; i < rating_numbers.length; i++) {
+      div.innerHTML += '<i style="background:' + chooseWaffleColor(rating_numbers[i]) + '"></i>' + 
+              rating_numbers[i] + (rating_numbers[i+1] ? '&ndash;' + rating_numbers[i+1] : '+') + '<br>';
+    }
 
-  // legend.addTo(myMap);  
+    // div.innerHTML += '<a href="temp.html"></a>';
+    // div.innerHTML += '<br><a href="temp.html">Main Page</a>';
+  
+    console.log("DIV", div.innerHTML);
+    return div;
+  };
+
+  legend.addTo(myMap);  
 
   // Basemaps...only 1 map can be selected
   var baseMaps = {
