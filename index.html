@@ -28,7 +28,31 @@
 
 </head>
 <body>
-    <div> <a href="temp.html"></a></div>
+    <div class="container">
+        <div class="row">
+          <div class="col-md-12 jumbotron text-center">
+            <h1>WAFFLE HOUSE</h1>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="well">
+                    <h3>Specify Waffle House for rating:</h3>
+                     <select id="selDataset" onchange="optionChanged(this.value)"></select>
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Rating and Local Income Data</h5>
+                    <!--<svg id="chart"></svg>  -->
+                </div>
+                <div id="chart"></div>
+            </div>
+              
+        </div>
+    </div>    
+        
+        
     <div id="map"></div>
 
 
