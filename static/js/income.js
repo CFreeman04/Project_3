@@ -1,5 +1,6 @@
 // Our static json made from jsonifying our csv
-var url = "../../waffle_house.json";
+//var url = "waffle_house.json"
+var url = "Cleaned_IncomeData.json";
 
 // Perform a GET request to the query URL/
 d3.json(url).then(function(data) {
@@ -8,12 +9,14 @@ d3.json(url).then(function(data) {
 });
 
 // Functipon to determine marker color
-rating_numbers = [0, 3, 3.8, 4.2]
-function chooseColor(rating) {
-  if (rating < rating_numbers[1]) return "gray";
-  else if (rating < rating_numbers[2]) return "yellow";
-  else if (rating < rating_numbers[3]) return "green";
-  else return "blue";
+income_levels = [0, 30000, 60000, 90000, 120000, 150000]
+function chooseColor(Median) {
+  if (Median < income_levels[1]) return "purple";
+  else if (Median < income_levels[2]) return "cyan";
+  else if (Median < income_levels[3]) return "orange";
+  else if (Median < income_levels[4]) return "red";
+  else if (Median < income_levels[5]) return "plum";
+  else return "lime";
 }
 
 function createMaps(waffles) {
@@ -28,15 +31,15 @@ function createMaps(waffles) {
     });
   
       for (var i = 0; i < Object.keys((waffles)).length; i++) {
-        L.circle([waffles[i].lat, waffles[i].lng], {
-          fillOpacity: 0.75,
+        L.circle([waffles[i].Lat, waffles[i].Lon], {
+          fillOpacity: 0.50,
           color: "black",
           weight: .5,
-          fillColor: chooseColor(waffles[i].rating),
+          fillColor: chooseColor(waffles[i].Median),
           // Setting our circle's radius to equal the output of our markerSize() function:
           // This will make our marker's size proportionate to earthquake magnitude
-          radius: 15000
-        }).bindPopup(`<h2>${waffles[i].name}</h2> <hr> <h3>${waffles[i].address}</h3>`).addTo(myMap);
+          radius: 5000
+        }).bindPopup(`<h2>${waffles[i].City}</h2> <hr> <h3>${waffles[i].Median}</h3>`).addTo(myMap);
       }
 
    // ------- Legend for ratings -------------------------------------------
@@ -45,10 +48,10 @@ function createMaps(waffles) {
     legend.onAdd = function(map) {  
       var div = L.DomUtil.create("div", "legend");
 
-      div.innerHTML = "<h4>Rating</h4>";
-      for (i = 0; i < rating_numbers.length; i++) {
-        div.innerHTML += '<i style="background:' + chooseColor(rating_numbers[i]) + '"></i>' + 
-                rating_numbers[i] + (rating_numbers[i+1] ? '&ndash;' + rating_numbers[i+1] : '+') + '<br>';
+      div.innerHTML = "<h4>Median Income</h4>";
+      for (i = 0; i < income_levels.length; i++) {
+        div.innerHTML += '<i style="background:' + chooseColor(income_levels[i]) + '"></i>' + 
+                income_levels[i] + (income_levels[i+1] ? '&ndash;' + income_levels[i+1] : '+') + '<br>';
       }
     return div;
    };
