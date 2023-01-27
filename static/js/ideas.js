@@ -1,15 +1,12 @@
-// Our static json made from jsonifying our csv
-var url = "../../waffle_house.json";
-
 // Perform a GET request to the query URL/
-d3.json(url).then(function(data) {
+d3.json("data/waffle_house.json").then(function(data) {
   // Once we get a response, send the data.features object to the createFeatures function.
   createMaps(data);
 });
 
-// Functipon to determine marker color for Waffle House locations
+// Function to determine marker color for Waffle House locations
 rating_numbers = [0, 3, 3.8, 4.2]
-function chooseColor1(rating) {
+function chooseWaffleColor(rating) {
   if (rating < rating_numbers[1]) return "gray";
   else if (rating < rating_numbers[2]) return "yellow";
   else if (rating < rating_numbers[3]) return "green";
@@ -18,7 +15,7 @@ function chooseColor1(rating) {
 
 // Function to determine marker color for incorme data
 income_levels = [0, 30000, 60000, 90000, 120000, 150000]
-function chooseColor2(median) {
+function chooseIncomeColor(median) {
   if (median < income_levels[1]) return "yellow";
   else if (median < income_levels[2]) return "cyan";
   else if (median < income_levels[3]) return "orange";
@@ -40,7 +37,7 @@ function createMaps(waffles) {
       fillOpacity: 0.75,
       color: "black",
       weight: .5,
-      fillColor: chooseColor1(waffles[i].rating),
+      fillColor: chooseWaffleColor(waffles[i].rating),
       radius: 15000
     }).bindPopup(`<h2>${waffles[i].name}</h2> <hr> <h3>${waffles[i].address}</h3>`).addTo(waffle_house);
   }
@@ -49,14 +46,14 @@ function createMaps(waffles) {
   // ----------------- Income Layer ------------------------------------------------------------------------------------
   waffle_income = new L.LayerGroup();
     // Perform a GET request to the query URL/
-  d3.json("Cleaned_IncomeData.json").then(function(waffle_data) {
+  d3.json("data/Cleaned_IncomeData.json").then(function(waffle_data) {
     // Once we get a response, send the data.features object to the createFeatures function.
     for (var i = 0; i < Object.keys(waffle_data).length; i++) {
       L.circle([waffle_data[i].Lat, waffle_data[i].Lon], {
         fillOpacity: 0.50,
         color: "black",
         weight: .5,
-        fillColor: chooseColor2(waffle_data[i].Median),
+        fillColor: chooseIncomeColor(waffle_data[i].Median),
         // Setting our circle's radius to equal the output of our markerSize() function:
         // This will make our marker's size proportionate to earthquake magnitude
         radius: 5000
@@ -68,7 +65,7 @@ function createMaps(waffles) {
   // ------------------ Heat Layer --------------------------------------------------------------------------------------
   heatmap = new L.LayerGroup();
 
-  d3.json("master_data.json").then(function(response) {
+  d3.json("data/master_data.json").then(function(response) {
 
     var heatArray = [];
   
@@ -87,10 +84,10 @@ function createMaps(waffles) {
   var myMap = L.map("map", {
     center: [37.09, -95.71],
     zoom: 5,
-    layers: [street, heatmap]
+    layers: [street, waffle_house]
   });
 
-   // ------- Legend for ratings -------------------------------------------
+  // ------- Legend for ratings -------------------------------------------
   // var legend = L.control({ position: "topright" });
 
   // legend.onAdd = function(map) {  
@@ -106,10 +103,12 @@ function createMaps(waffles) {
 
   // legend.addTo(myMap);  
 
+  // Basemaps...only 1 map can be selected
   var baseMaps = {
     "Street": street
   };
 
+  // Overlay Maps...can toggle these data points on/off
   var overlayMaps = {
     "Waffle House": waffle_house,
     "Income": waffle_income,
