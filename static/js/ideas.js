@@ -11,20 +11,20 @@ d3.json(url).then(function(data) {
 rating_numbers = [0, 3, 3.8, 4.2]
 function chooseColor1(rating) {
   if (rating < rating_numbers[1]) return "gray";
-  else if (rating < rating_numbers[2]) return "yellow";
-  else if (rating < rating_numbers[3]) return "green";
-  else return "blue";
+  else if (rating < rating_numbers[2]) return "brown";
+  else if (rating < rating_numbers[3]) return "#231F20";
+  else return "#FFF200";
 }
 
 // Function to determine marker color for incorme data
 income_levels = [0, 30000, 60000, 90000, 120000, 150000]
 function chooseColor2(median) {
-  if (median < income_levels[1]) return "yellow";
-  else if (median < income_levels[2]) return "cyan";
-  else if (median < income_levels[3]) return "orange";
-  else if (median < income_levels[4]) return "red";
-  else if (median < income_levels[5]) return "plum";
-  else return "lime";
+  if (median < income_levels[1]) return "red";
+  else if (median < income_levels[2]) return "orange";
+  else if (median < income_levels[3]) return "yellow";
+  else if (median < income_levels[4]) return "green";
+  else if (median < income_levels[5]) return "blue";
+  else return "purple";
 }
 
 function createMaps(waffles) {
@@ -41,7 +41,7 @@ function createMaps(waffles) {
       color: "black",
       weight: .5,
       fillColor: chooseColor1(waffles[i].rating),
-      radius: 15000
+      radius: 1000
     }).bindPopup(`<h2>${waffles[i].name}</h2> <hr> <h3>${waffles[i].address}</h3>`).addTo(waffle_house);
   }
   // -------------------------------------------------------------------------------------------------------------------
@@ -53,13 +53,13 @@ function createMaps(waffles) {
     // Once we get a response, send the data.features object to the createFeatures function.
     for (var i = 0; i < Object.keys(waffle_data).length; i++) {
       L.circle([waffle_data[i].Lat, waffle_data[i].Lon], {
-        fillOpacity: 0.50,
+        fillOpacity: 0.20,
         color: "black",
         weight: .5,
         fillColor: chooseColor2(waffle_data[i].Median),
         // Setting our circle's radius to equal the output of our markerSize() function:
         // This will make our marker's size proportionate to earthquake magnitude
-        radius: 5000
+        radius: 2000
       }).bindPopup(`<h2>${waffle_data[i].City}</h2> <hr> <h3>${waffle_data[i].Median}</h3>`).addTo(waffle_income);
     }
   });
