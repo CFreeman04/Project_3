@@ -1,8 +1,62 @@
+function init() {
+  var selector = d3.select("#selDataset");
+
+  d3.json("data/waffle_house_data.json").then((waffle_data) => {
+    var sampleWaffle = waffle_data.names;
+    sampleWaffle.forEach((sample) => {
+      selector
+        .append("option")
+        .text(sample)
+   });
+
+   var initialWaffleHouse = sampleWaffle[0];
+  //  console.log(initialWaffleHouse);
+   showRating(initialWaffleHouse);
+
+   createMaps(waffle_data.data);
+  });
+
+//fill options
+
+};
+
+init();
+
+function optionChanged(newWaffle) {
+  showRating(newWaffle);
+}
+
+function showRating(sample) {
+  // d3.select("#selDataset").on("change", function() {
+  //   var selectedName = d3.select(this).property("value");
+  //   var selectedWaffle = sampleWaffle.filter(waffle => waffle.name === selectedName);
+  //   d3.select("#rating").text(`Rating: ${selectedWaffle["0"].rating}`);
+  d3.json("data/waffle_house_data.json").then((waffle_data) => {
+    var ratings = waffle_data.data
+
+    // FIlter the data for object with selected sample number
+
+    var ratingsArray = ratings.filter(sampleObj => sampleObj.name == sample);
+    var selectedWaffle = ratingsArray[0];
+    // console.log(selectedWaffle);
+    var PANEL = d3.select("#chart");
+
+    // // Clear PANEL before populating with new data
+    PANEL.html("");
+    PANEL.html(`Rating: ${selectedWaffle.rating} <br> Local Income: $${selectedWaffle.median.toLocaleString("en-US")}`);
+
+    // Object.entries(selectedSample).forEach(([key, value]) => {
+    //     PANEL.append("h6").text(`${key}: ${value}`);
+    // });
+  });
+
+};
+
 // Perform a GET request to the query URL/
-d3.json("data/waffle_house.json").then(function(data) {
-  // Once we get a response, send the data.features object to the createFeatures function.
-  createMaps(data);
-});
+// d3.json("data/waffle_house_data.json").then(function(data) {
+//   // Once we get a response, send the data.features object to the createFeatures function.
+//   createMaps(data);
+// });
 
 // Function to determine marker color for Waffle House locations
 rating_numbers = [0, 3, 3.8, 4.2]
@@ -43,7 +97,7 @@ function createMaps(waffles) {
   // Create circles for waffle
   waffle_house = new L.LayerGroup();
   for (var i = 0; i < Object.keys(waffles).length; i++) {
-    L.circle([waffles[i].lat, waffles[i].lng], {
+    L.circle([waffles[i].waffle_house_lat, waffles[i].waffle_house_lon], {
       fillOpacity: 0.75,
       color: "black",
       weight: .5,
@@ -80,13 +134,16 @@ function createMaps(waffles) {
   // ------------------ Heat Layer --------------------------------------------------------------------------------------
   heatmap = new L.LayerGroup();
 
-  d3.json("data/master_data.json").then(function(response) {
-
+  d3.json("data/waffle_house_data.json").then(function(response) {
+    console.log("RESPONSE",response);
+    console.log("RES",Object.keys(response.data).length);
     var heatArray = [];
   
-    for (var i = 0; i < Object.keys(response).length; i++) {
-      heatArray.push([response[i].waffle_house_lat, response[i].waffle_house_lon]);
+    for (var i = 0; i < Object.keys(response.data).length; i++) {
+      heatArray.push([response.data[i].waffle_house_lat, response.data[i].waffle_house_lon]);
     } 
+
+    console.log("HA",heatArray);
 
     var heat = L.heatLayer(heatArray, {
       radius: 50,
@@ -103,20 +160,24 @@ function createMaps(waffles) {
   });
 
   // ------- Legend for ratings -------------------------------------------
-  // var legend = L.control({ position: "topright" });
+  var legend = L.control({ position: "bottomright" });
 
-  // legend.onAdd = function(map) {  
-  //   var div = L.DomUtil.create("div", "legend");
+  legend.onAdd = function(map) {  
+    var div = L.DomUtil.create("div", "legend");
 
-  //   div.innerHTML = "<h4>Rating</h4>";
-  //   for (i = 0; i < rating_numbers.length; i++) {
-  //     div.innerHTML += '<i style="background:' + chooseColor1(rating_numbers[i]) + '"></i>' + 
-  //             rating_numbers[i] + (rating_numbers[i+1] ? '&ndash;' + rating_numbers[i+1] : '+') + '<br>';
-  //   }
-  // return div;
-  // };
+    div.innerHTML = "<h4>Rating</h4>";
+    for (i = 0; i < rating_numbers.length; i++) {
+      div.innerHTML += '<i style="background:' + chooseWaffleColor(rating_numbers[i]) + '"></i>' + 
+              rating_numbers[i] + (rating_numbers[i+1] ? '&ndash;' + rating_numbers[i+1] : '+') + '<br>';
+    }
 
-  // legend.addTo(myMap);  
+    // div.innerHTML += '<a href="temp.html"></a>';
+    // div.innerHTML += '<br><a href="temp.html">Main Page</a>';
+  
+    return div;
+  };
+
+  legend.addTo(myMap);  
 
   // Basemaps...only 1 map can be selected
   var baseMaps = {
