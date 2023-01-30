@@ -105,5 +105,3 @@ function showRating(sample) {
   });
 
 };
-
-init();
